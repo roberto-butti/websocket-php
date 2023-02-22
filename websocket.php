@@ -2,38 +2,43 @@
 
 /*
 001
-Include Swoole classes used in the script
+Include OpenSwoole classes used in the script
 */
-use Swoole\WebSocket\{Server, Frame};
+use OpenSwoole\WebSocket\{Server, Frame};
+use OpenSwoole\Constant;
+use OpenSwoole\Table;
 
 /*
 002
 Instancing the Server on port 9501 , listening on 0.0.0.0 (accepting all incoming reqeust)
-On TCP protocol (SWOOLE_SOCK_TCP) and Secure WebSocket (SWOOLE_SSL)
+On TCP protocol (Constant::SOCK_TCP). If you want to enable Secure WebSocket you should use Constant::SSL
+as forth parameter `Constant::SOCK_TCP || Constant::SSL` )
 */
 
-$server = new Server("0.0.0.0", 9501, SWOOLE_PROCESS, SWOOLE_SOCK_TCP | SWOOLE_SSL);
+$server = new Server("0.0.0.0", 9501, Server::SIMPLE_MODE, Constant::SOCK_TCP);
 
 /*
 003
 Creating a Table (a two dimensions memory table) with fd and name fields
 */
-$fds = new Swoole\Table(1024);
-$fds->column('fd', Swoole\Table::TYPE_INT, 4);
-$fds->column('name', Swoole\Table::TYPE_STRING, 16);
+$fds = new Table(1024);
+$fds->column('fd', Table::TYPE_INT, 4);
+$fds->column('name', Table::TYPE_STRING, 16);
 $fds->create();
 
 /*
-003
-Set certificates
+004
+Set certificates if you want Secure Web Socket
 */
+/*
 $server->set([
     'ssl_cert_file' => __DIR__ . '/localhost+2.pem',
     'ssl_key_file' => __DIR__ . '/localhost+2-key.pem'
 ]);
+*/
 
 /*
-004
+005
 Listen the Start event.
 "Start" is triggered once the websocket service is started
 */
@@ -42,11 +47,11 @@ $server->on("Start", function (Server $server) {
 });
 
 /*
-008
+006
 Listen the Open event.
 "Open" is triggered once a client is connected
 */
-$server->on('Open', function (Server $server, Swoole\Http\Request $request) use ($fds) {
+$server->on('Open', function (Server $server, OpenSwoole\Http\Request $request) use ($fds) {
     $fd = $request->fd;
     $clientName = sprintf("Client-%'.06d\n", $request->fd);
     $fds->set($request->fd, [
@@ -64,7 +69,7 @@ $server->on('Open', function (Server $server, Swoole\Http\Request $request) use 
 });
 
 /*
-009
+007
 Listen the Message event.
 "Message" is triggered once a client sent a message to WebSocket service
 */
@@ -75,13 +80,13 @@ $server->on('Message', function (Server $server, Frame $frame) use ($fds) {
         if ($key == $frame->fd) {
             $server->push($frame->fd, "Message sent");
         } else {
-            $server->push($key,  "FROM: {$sender} - MESSAGE: " . $frame->data);
+            $server->push($key, "FROM: {$sender} - MESSAGE: " . $frame->data);
         }
     }
 });
 
 /*
-010
+008
 Listen the Close event.
 "Close" is triggered once a client close the connection
 */
@@ -91,7 +96,7 @@ $server->on('Close', function (Server $server, int $fd) use ($fds) {
 });
 
 /*
-011
+009
 Listen the Disconnect event.
 "Disconnect" is triggered once a client loose the connection
 */
@@ -101,7 +106,7 @@ $server->on('Disconnect', function (Server $server, int $fd) use ($fds) {
 });
 
 /*
-012
+010
 Start the WebSocket server, so the "Start" event is triggered
 */
 $server->start();

@@ -1,5 +1,8 @@
 {
     "require-dev": {
-        "swoole/ide-helper": "@dev"
+        "openswoole/ide-helper": "~22.0.1"
+    },
+    "require": {
+        "openswoole/core": "22.1.2"
     }
 }
