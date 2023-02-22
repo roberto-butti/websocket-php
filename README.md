@@ -1,6 +1,6 @@
 # WebSocket with PHP and Open Swoole
-![WebSocket with PHP](https://res.cloudinary.com/practicaldev/image/fetch/s--L9v-v8bt--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/qmlxilq3kmp0tbgd36oe.png)
+![WebSocket with PHP](https://cdn.hashnode.com/res/hashnode/image/upload/v1677052108206/80574b05-13d5-421b-a984-a2a4e237ee47.png?w=1600&h=840&fit=crop&crop=entropy&auto=compress,format&format=webp)
 
 Example for WebSocket with PHP.
 
-The tutorial: https://dev.to/robertobutti/websocket-with-php-4k2c
+The tutorial: https://hi-folks.hashnode.dev/websocket-with-php
