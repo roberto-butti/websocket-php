@@ -3,4 +3,4 @@
 
 Example for WebSocket with PHP.
 
-The tutorial: https://hi-folks.hashnode.dev/websocket-with-php
+The tutorial: [https://dev.to/robertobutti/websocket-with-php-4k2c](https://dev.to/robertobutti/websocket-with-php-4k2c)
