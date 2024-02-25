@@ -53,7 +53,7 @@ Listen the Open event.
 */
 $server->on('Open', function (Server $server, OpenSwoole\Http\Request $request) use ($fds) {
     $fd = $request->fd;
-    $clientName = sprintf("Client-%'.06d\n", $request->fd);
+    $clientName = sprintf("Client-%'.06d", $request->fd);
     $fds->set($request->fd, [
         'fd' => $fd,
         'name' => sprintf($clientName)
