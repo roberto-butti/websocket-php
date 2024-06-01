@@ -4,8 +4,10 @@
 001
 Include OpenSwoole classes used in the script
 */
-use OpenSwoole\WebSocket\{Server, Frame};
+
+use OpenSwoole\WebSocket\{Frame, Server};
 use OpenSwoole\Constant;
+use OpenSwoole\Http\Request;
 use OpenSwoole\Table;
 
 /*
@@ -15,7 +17,13 @@ On TCP protocol (Constant::SOCK_TCP). If you want to enable Secure WebSocket you
 as forth parameter `Constant::SOCK_TCP || Constant::SSL` )
 */
 
-$server = new Server("0.0.0.0", 9501, Server::SIMPLE_MODE, Constant::SOCK_TCP);
+
+$server = new Server(
+    host: "0.0.0.0",
+    port: 9501,
+    mode: Server::SIMPLE_MODE,
+    sockType: Constant::SOCK_TCP,
+);
 
 /*
 003
@@ -51,12 +59,12 @@ $server->on("Start", function (Server $server) {
 Listen the Open event.
 "Open" is triggered once a client is connected
 */
-$server->on('Open', function (Server $server, OpenSwoole\Http\Request $request) use ($fds) {
+$server->on('Open', function (Server $server, Request $request) use ($fds) {
     $fd = $request->fd;
     $clientName = sprintf("Client-%'.06d", $request->fd);
     $fds->set($request->fd, [
         'fd' => $fd,
-        'name' => sprintf($clientName)
+        'name' => sprintf($clientName),
     ]);
     echo "Connection <{$fd}> open by {$clientName}. Total connections: " . $fds->count() . "\n";
     foreach ($fds as $key => $value) {
